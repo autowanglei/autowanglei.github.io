@@ -1,5 +1,3 @@
-[TOC]
-
 
 ## ButterKnife是什么 ##
 ButterKnife是一个开源的 Android 系统的 View 注入框架，通过注解的方式来绑定 View 的属性或方法，大量减少了类似 findViewById() 以及 setOnClickListener() 等代码，提升开发效率。
