@@ -1,15 +1,17 @@
+[TOC]
 
 ## 1. ButterKnife是什么 ##
+
 ButterKnife是一个开源的 Android 系统的 View 注入框架，通过注解的方式来绑定 View 的属性或方法，大量减少了类似 findViewById() 以及 setOnClickListener() 等代码，提升开发效率。
 
 butterknife官方博客：[http://jakewharton.github.io/butterknife/](http://jakewharton.github.io/butterknife/)
 
 ## 2. ButterKnife使用 ##
-#### 2.1导入ButterKnife框架 ###
+### 2.1导入ButterKnife框架 ###
 1. Eclipse,可以去官网下载jar包。
 2. AndroidStudio可以直接 File->Project Structure->Dependencies->Library dependency 搜索butterknife即可。
 
-#### 2.2 编码前需了解  ###
+### 2.2 编码前需了解  ###
 1.Activity ButterKnife.bind(this);必须在setContentView();之后，且父类bind绑定后，子类不需要再bind。
 
 2.Fragment ButterKnife.bind(this, mRootView)。
@@ -18,12 +20,12 @@ butterknife官方博客：[http://jakewharton.github.io/butterknife/](http://jak
 
 4.setContentView()不能通过注解实现。
 
-#### 2.3 常见使用方法 ###
+### 2.3 常见使用方法 ###
 1. 绑定Activity
 
         public abstract class BaseActivity extends Activity {  
             public abstract int getContentViewId();  
-  
+         
             @Override  
             protected void onCreate(Bundle savedInstanceState) {  
                 super.onCreate(savedInstanceState);  
@@ -31,9 +33,9 @@ butterknife官方博客：[http://jakewharton.github.io/butterknife/](http://jak
                 ButterKnife.bind(this);  
                 initAllMembersView(savedInstanceState);  
             }  
-  
+         
             protected abstract void initAllMembersView(Bundle savedInstanceState);  
-  
+         
             @Override  
             protected void onDestroy() {  
                 super.onDestroy();  
@@ -46,7 +48,7 @@ butterknife官方博客：[http://jakewharton.github.io/butterknife/](http://jak
             public abstract int getContentViewId();  
             protected Context context;  
             protected View mRootView;  
-  
+         
             @Nullable  
             @Override  
             public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {  
@@ -56,9 +58,9 @@ butterknife官方博客：[http://jakewharton.github.io/butterknife/](http://jak
                 initAllMembersView(savedInstanceState);  
                 return mRootView;  
             }  
-  
+         
             protected abstract void initAllMembersView(Bundle savedInstanceState);  
-  
+         
             @Override  
             public void onDestroyView() {  
                 super.onDestroyView();  
@@ -94,24 +96,24 @@ butterknife官方博客：[http://jakewharton.github.io/butterknife/](http://jak
 6. 点击事件的绑定
 
     不用声明view，不用setOnClickLisener（）就可以绑定点击事件。
-        
+    ​    
     - 直接绑定一个方法，参数是可选的，也定义一个特定类型，它将自动被转换
-    
-		  ![](https://i.imgur.com/7iSIISD.png)
+
+        ![](https://i.imgur.com/7iSIISD.png)
     - 多个view统一处理同一个点击事件
 
-		 ![](https://i.imgur.com/qHITUjy.png)
+       ![](https://i.imgur.com/qHITUjy.png)
     - 自定义view可以绑定自己的监听，不指定id
 
-		![](https://i.imgur.com/RqlHmAP.png)
+      ![](https://i.imgur.com/RqlHmAP.png)
     - 给EditText加addTextChangedListener（即添加多回调方法的监听的使用方法），利用指定回调，实现想回调的方法即可
 
-		![](https://i.imgur.com/SvX63VI.png)
+      ![](https://i.imgur.com/SvX63VI.png)
 
 7. 对一组View进行统一操作
-        
+    ​      
     a. 装入一个list
-       
+
        ![](https://i.imgur.com/50qJqmE.png)
 
     b. 设置统一处理
@@ -123,26 +125,26 @@ butterknife官方博客：[http://jakewharton.github.io/butterknife/](http://jak
       ![](https://i.imgur.com/gQnHBdy.png)
 
 8. 可选绑定
-	默认情况下，“绑定”和“监听”绑定都是必需的。如果不能找到目标视图，则将抛出异常，所以做空处理。
+  默认情况下，“绑定”和“监听”绑定都是必需的。如果不能找到目标视图，则将抛出异常，所以做空处理。
 
-	![](https://i.imgur.com/riZTKBR.png)
+  ![](https://i.imgur.com/riZTKBR.png)
 
 
-#### 2.4 代码混淆 ###
+### 2.4 代码混淆 ###
 
     -keep class butterknife.** { *; }  
     -dontwarn butterknife.internal.**  
     -keep class **$$ViewBinder { *; }  
-  
+      
     -keepclasseswithmembernames class * {  
         @butterknife.* <fields>;  
     }  
-  
+      
     -keepclasseswithmembernames class * {  
         @butterknife.* <methods>;  
     }  
 
-#### 2.5 Zelezny插件的使用 ###
+### 2.5 Zelezny插件的使用 ###
 AndroidStudio->File->Settings->Plugins->搜索Zelezny下载添加 ，可以快速生成对应组件的实例对象，不用手动写。使用时，在要导入注解的Activity 或 Fragment 或 ViewHolder的layout资源代码上，右键——>Generate——Generate ButterKnife Injections，然后就出现如图的选择框。
 
    ![](http://img.blog.csdn.net/20160324150702240)
@@ -155,11 +157,11 @@ PS:随着框架的改变，对于Android ButterKnife Zelezny插件就不再兼�
 ## 3. ButterKnife工作流程 ##
 - 编译阶段
 
-	编译你的Android工程时，ButterKnife工程中ButterKnifeProcessor类的process()方法会执行以下操作：
-	首先扫描Java代码中所有的ButterKnife注解@Bind、@BindView、@OnClick、@OnItemClicked等 
-	当发现一个类中含有任何一个注解时，ButterKnifeProcessor会帮你生成一个Java类，名字类似$$ViewBinder.java(8.8.1生成_ViewBinding.java)，这个新生成的类实现了ViewBinder接口。这个ViewBinder类中包含了所有对应的代码，比如@BindView注解对应findViewById(), @OnClick对应了view.setOnClickListener()等等。
+  编译你的Android工程时，ButterKnife工程中ButterKnifeProcessor类的process()方法会执行以下操作：
+  首先扫描Java代码中所有的ButterKnife注解@Bind、@BindView、@OnClick、@OnItemClicked等 
+  当发现一个类中含有任何一个注解时，ButterKnifeProcessor会帮你生成一个Java类，名字类似$$ViewBinder.java(8.8.1生成_ViewBinding.java)，这个新生成的类实现了ViewBinder接口。这个ViewBinder类中包含了所有对应的代码，比如@BindView注解对应findViewById(), @OnClick对应了view.setOnClickListener()等等。
 
-	如下：
+  如下：
 
     ![](https://i.imgur.com/GEE6iKt.png)
 
@@ -181,13 +183,13 @@ PS:随着框架的改变，对于Android ButterKnife Zelezny插件就不再兼�
     3. 运行时不会影响APP性能，使用配置方便。
     
         Instead of slow reflection, code is generated to perform the view look-ups.（摘自[butterknife官方博客](http://jakewharton.github.io/butterknife/)）。
-
+    
     4. 代码清晰，可读性强（至于代码可读性好坏因人而异）。
-  
+
 
 - 弊端
 
-    
+
     1. library工程无法使用butterKnife进行注入（此问题8.4.0后已解决）。
     2. 方法数更多了，更容易触及65536上限。
     3. 增加安装包的大小。
@@ -213,12 +215,12 @@ apt 'com.jakewharton:butterknife-compiler:8.8.1'
 
 
 ## 6. 延伸 ##
-#### 6.1 反射对性能的影响 ###
+### 6.1 反射对性能的影响 ###
 
 Method.invoke()本身要用数组包装参数；而且每次调用都必须检查方法的可见性（在Method.invoke()里），也必须检查每个实际参数与形式参数的类型匹配性（在NativeMethodAccessorImpl.invoke0()里或者生成的Java版MethodAccessor.invoke()里）；而且Method.invoke()就像是个独木桥一样，各处的反射调用都要挤过去，在调用点上收集到的类型信息就会很乱，影响内联程序的判断，使得Method.invoke()自身难以被内联到调用方。
 
 
-#### 6.2 APT ###
+### 6.2 APT ###
 APT(Annotation processing tool) 是一种处理注释的工具,它对源代码文件进行检测找出其中的Annotation，使用Annotation进行额外的处理。
 Annotation处理器在处理Annotation时可以根据源文件中的Annotation生成额外的源文件和其它的文件(文件具体内容由Annotation处理器的编写者决定),APT还会编译生成的源文件和原来的源文件，将它们一起生成class文件.使用APT主要的目的是简化开发者的工作量。
 因为APT可以编译程序源代码的同时，生成一些附属文件(比如源文件类文件程序发布描述文件等)，这些附属文件的内容也都是与源代码相关的，换句话说，使用APT可以代替传统的对代码信息和附属文件的维护工作。
