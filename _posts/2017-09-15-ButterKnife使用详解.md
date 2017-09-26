@@ -42,6 +42,7 @@ butterknife官方博客：[http://jakewharton.github.io/butterknife/](http://jak
                 ButterKnife.unbind(this);//解除绑定，官方文档只对fragment做了解绑  
             }  
         }  
+
 2. 绑定Fragment
 
         public abstract class BaseFragment extends Fragment {  
@@ -89,6 +90,7 @@ butterknife官方博客：[http://jakewharton.github.io/butterknife/](http://jak
         CheckBox mCheckBox;  
         @BindDrawable(R.drawable.selector_image)  
         Drawable selector;  
+
 5. Adapter ViewHolder 绑定
 
     ![](https://i.imgur.com/6jsqYzp.png)
@@ -114,11 +116,11 @@ butterknife官方博客：[http://jakewharton.github.io/butterknife/](http://jak
     ​      
     a. 装入一个list
 
-       ![](https://i.imgur.com/50qJqmE.png)
+    ![微信截图_20170920115139](C:\Users\wanglei08.UNIPOWER\Desktop\temp_pic\微信截图_20170920115139.png)
 
-    b. 设置统一处理
+       b. 设置统一处理
 
-       ![](https://i.imgur.com/oguozYz.png)
+    ![微信截图_20170920115552](C:\Users\wanglei08.UNIPOWER\Desktop\temp_pic\微信截图_20170920115552.png)
 
     c.统一操作处理，例如设置是否可点，属性等 
 
