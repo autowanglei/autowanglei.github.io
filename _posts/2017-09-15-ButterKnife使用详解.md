@@ -95,7 +95,7 @@ butterknife官方博客：[http://jakewharton.github.io/butterknife/](http://jak
 
 6. 点击事件的绑定
 
-    不用声明view，不用setOnClickLisener（）就可以绑定点击事件。
+    不用声明view，不用setOnClickLisener（）就可以绑定点击事件。 
     ​    
     - 直接绑定一个方法，参数是可选的，也定义一个特定类型，它将自动被转换
 
