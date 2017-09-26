@@ -120,7 +120,7 @@ butterknife官方博客：[http://jakewharton.github.io/butterknife/](http://jak
 
     b. 设置统一处理
 
-       ![](https://i.imgur.com/SFu0JLr.png)
+      ![](https://i.imgur.com/SFu0JLr.png)
 
     c.统一操作处理，例如设置是否可点，属性等 
 
