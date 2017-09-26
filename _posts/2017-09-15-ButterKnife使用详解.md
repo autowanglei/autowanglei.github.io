@@ -159,9 +159,9 @@ PS:随着框架的改变，对于Android ButterKnife Zelezny插件就不再兼�
 ## 3. ButterKnife工作流程 ##
 - 编译阶段
 
-  编译你的Android工程时，ButterKnife工程中ButterKnifeProcessor类的process()方法会执行以下操作：
-  首先扫描Java代码中所有的ButterKnife注解@Bind、@BindView、@OnClick、@OnItemClicked等 
-  当发现一个类中含有任何一个注解时，ButterKnifeProcessor会帮你生成一个Java类，名字类似$$ViewBinder.java(8.8.1生成_ViewBinding.java)，这个新生成的类实现了ViewBinder接口。这个ViewBinder类中包含了所有对应的代码，比如@BindView注解对应findViewById(), @OnClick对应了view.setOnClickListener()等等。
+  编译Android工程时，ButterKnife工程中ButterKnifeProcessor类的process()方法会执行以下操作：
+  首先扫描Java代码中所有的ButterKnife注解@Bind/@BindView、@OnClick、@OnItemClicked等 
+  当发现一个类中含有任何一个注解时，ButterKnifeProcessor会帮你生成一个Java类，名字类似$$ViewBinder.java/_ViewBinding.java，这个新生成的类实现了ViewBinder接口。这个ViewBinder类中包含了所有对应的代码，比如@BindView注解对应findViewById(), @OnClick对应了view.setOnClickListener()等等。
 
   如下：
 
@@ -172,7 +172,7 @@ PS:随着框架的改变，对于Android ButterKnife Zelezny插件就不再兼�
     执行bind方法时，会调用ButterKnife.bind(this)： ButterKnife会调用findViewBinderForClass(targetClass)加载MainActivity$$ViewBinder.java类。然后调用ViewBinder的bind方法，动态注入MainActivity类中所有的View属性。 
     如果Activity中有@OnClick注解的方法，ButterKnife会在ViewBinder类中给View设置onClickListener，并且将@OnClick注解的方法传入其中。
 
-    在上面的过程中可以看到，为什么你用@Bind、@OnClick等注解标注的属性或方法必须是public或protected的，因为ButterKnife是通过Activity.this.editText来注入View的。因为如果你把View设置成private，那么框架必须通过反射来注入View，不管现在手机的CPU处理器变得多快，如果有些操作会影响性能，那么是肯定要避免的，这就是ButterKnife与其他注入框架的不同。
+    在上面的过程中可以看到，为什么用@Bind/@BindView、@OnClick等注解标注的属性或方法必须是public或protected的，因为ButterKnife是通过Activity.this.XXX来注入View或方法的。如果把View设置成private，那么框架必须通过反射来注入View，不管现在手机的CPU处理器变得多快，如果有些操作会影响性能，那么是肯定要避免的，这就是ButterKnife与其他注入框架的不同。
 
 ## 4. ButterKnife 利弊  ##
 
