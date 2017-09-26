@@ -112,7 +112,7 @@ butterknife官方博客：[http://jakewharton.github.io/butterknife/](http://jak
 
       ![](https://i.imgur.com/SvX63VI.png)
 
-7. 对一组View进行统一操作
+7. 对一组View进行统一操作 
     ​      
     a. 装入一个list
 
