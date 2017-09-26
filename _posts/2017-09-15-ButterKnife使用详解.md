@@ -116,11 +116,11 @@ butterknife官方博客：[http://jakewharton.github.io/butterknife/](http://jak
     ​      
     a. 装入一个list
 
-    ![微信截图_20170920115139](C:\Users\wanglei08.UNIPOWER\Desktop\temp_pic\微信截图_20170920115139.png)
+       ![](https://i.imgur.com/50qJqmE.png)
 
-       b. 设置统一处理
+    b. 设置统一处理
 
-    ![微信截图_20170920115552](C:\Users\wanglei08.UNIPOWER\Desktop\temp_pic\微信截图_20170920115552.png)
+       ![](https://i.imgur.com/oguozYz.png)
 
     c.统一操作处理，例如设置是否可点，属性等 
 
