@@ -181,7 +181,6 @@ PS:随着框架的改变，对于Android ButterKnife Zelezny插件就不再兼�
 
 
     1. 强大的View绑定和Click事件处理功能，简化代码，提升开发效率。
-    2. 方便的处理Adapter里的ViewHolder绑定问题。
     3. 运行时不会影响APP性能，使用配置方便。
     
         Instead of slow reflection, code is generated to perform the view look-ups.（摘自[butterknife官方博客](http://jakewharton.github.io/butterknife/)）。
@@ -193,15 +192,16 @@ PS:随着框架的改变，对于Android ButterKnife Zelezny插件就不再兼�
 
 
     1. library工程无法使用butterKnife进行注入（此问题8.4.0后已解决）。
-    2. 方法数更多了，更容易触及65536上限。
-    3. 增加安装包的大小。
+    2. 方法数更多了，更容易触及65536上限；增加安装包的大小。
     4. 增加新人的学习成本。
 
 ## 5. 7.0.1升级8.8.1 ##
 Error:Error: Expected resource of type color [ResourceType]   https://github.com/JakeWharton/butterknife/issues/338
+
+
 1.在整个工程的gradle文件中加入  classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8' 
 
-   dependencies {
+    dependencies {
         classpath 'com.android.tools.build:gradle:2.0.0'
         classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
         // NOTE: Do not place your application dependencies here; they belong
