@@ -116,11 +116,11 @@ butterknife官方博客：[http://jakewharton.github.io/butterknife/](http://jak
     ​      
     a. 装入一个list
 
-       ![](https://i.imgur.com/50qJqmE.png)
+      ![](https://i.imgur.com/VsSCiVz.png)
 
     b. 设置统一处理
 
-       ![](https://i.imgur.com/oguozYz.png)
+       ![](https://i.imgur.com/SFu0JLr.png)
 
     c.统一操作处理，例如设置是否可点，属性等 
 
