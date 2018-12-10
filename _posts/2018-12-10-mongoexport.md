@@ -1,0 +1,1 @@
+1. mongoexport -h 172.31.124.16 --port 27017 -u root -p Hanergyrj001 -d Solarfac -c ancillary_info_irradiation -f deviceID,irradiation,sendTime --type=csv -o irradiation.csv --authenticationDatabase=admin
