@@ -4,6 +4,46 @@
 
 Activity、Service、Content provider、broadcast receiver 
 
+## 五大存储
+
+- SharePreferences： 
+
+  以键值对形式存储在xml文件中，路径为/data/data/<package name>/shared_prefs
+
+- 文件
+
+   openFileInput 和 openFileOuput 方法读取设备上的文件。
+
+- 网络
+
+- SQLite
+
+   SQLite是Android所带的一个标准的数据库，它支持SQL语句，它是一个轻量级的嵌入式数据库。 
+
+- content provider
+
+  提供接口：
+
+  - query（Uri uri, String[] projection, String selection, String[] selectionArgs,String sortOrder）
+
+    通过Uri进行查询，返回一个Cursor。
+
+  - insert（Uri url, ContentValues values）
+
+    将一组数据插入到Uri 指定的地方。
+
+  - update（Uri uri, ContentValues values, String where, String[] selectionArgs）
+
+    更新Uri指定位置的数据。
+
+  - delete（Uri url, String where, String[] selectionArgs）
+
+    删除指定Uri并且符合一定条件的数据。 
+
+## 六大布局
+
+LinerLayout、RelativeLayout、TabLayout、FrameLayout、GridLayout、AbsoluteLayout
+
 # Activity
 
 ## 生命周期
@@ -145,6 +185,122 @@ Activity、Service、Content provider、broadcast receiver
 ## 与Activity通信
 
 在fragment中定义回调接口，activity实现接口。
+
+# Service
+
+ Service通常位于后台运行，它一般不需要与用户交互，因此Service组件没有图形用户界面。Service分为两种工作状态，一种是启动状态，主要用于执行后台计算；另一种是绑定状态，主要用于与其他组件和service交互。
+
+## 生命周期
+
+![service生命周期](https://raw.githubusercontent.com/autowanglei/autowanglei.github.io/master/_posts/android/Android学习记录/service生命周期.webp)
+
+## 启动方式，区别
+
+-  startService()
+
+  调用startService后，会调用onStartCommond()。当服务处于started状态时，其生命周与其他组件无关，可以在后台无期限运行，即使启动服务的组件已被销毁。因此服务在完成任务后要调用stopSelf()，或者由其他组件调用stopService。
+
+- bindService()
+
+  调用者与服务绑定在一起，调用者一旦停止，服务也就终止。
+
+# BroadcastReceiver
+
+广播接收者，可以使用它对外部事件进行过滤，只对感兴趣的做出响应。广播接收者有两种注册方式，动态注册和静态注册。
+
+# Content Provider
+
+多个应用程序共享数据的组件，通过ContentResolver对象实现对ContentProvider的操作，是不同程序间共享数据的唯一方式；使用URI来唯一标识其数据集，这里的URI以content://作为前缀，表示该数据由ContentProvider来管理 。
+
+ **ContentProvider 和 sql 在实现上有什么区别? **
+
+- ContentProvider 屏蔽了数据存储的细节，内部实现透明化，用户只需关心 uri 即可(是否匹配)
+- ContentProvider 能实现不同 app 的数据共享，sql 只能是自己程序才能访问
+- Contentprovider 还能增删本地的文件,xml等信息
+
+# View
+
+![View](https://raw.githubusercontent.com/autowanglei/autowanglei.github.io/master/_posts/android/Android学习记录/view.png)
+
+ View 的三大流程均是通过 ViewRoot 来完成的，ViewRoot 对应于 ViewRootImpl 类，他是链接WindowManager 和 DecorView（ activity窗口的根视图 ） 的纽带， 在 ActivityThread 中，当 Activity 对象被创建完毕后，会将 DecorView 添加到 Window 中，同时会创建 ViewRootImpl 对象，并将 ViewRootImpl 对象和 DecorView 建立关联。
+
+ View 的整个绘制流程可以分为以下三个阶段： 
+
+- measure： 是用来测量 View 的宽和高  
+- layout： layout 是用来确定 View 在父容器中的放置位置 
+- draw：  负责将 View 绘制在屏幕上  
+
+## MeasureSpec
+
+ MeasureSpec表示的是一个32位的整形值，它的高2位表示测量模式SpecMode，低30位表示某种测量模式下的规格大小SpecSize。 
+
+## MotionEvent
+
+ `getX/getY` 返回相对于当前View左上角的坐标，`getRawX/getRawY` 返回相对于屏幕左上角的坐标 
+
+## VelocityTracker
+
+ 可用于追踪手指在滑动中的速度 
+
+## GestureDetector
+
+  辅助检测用户的单击、滑动、长按、双击等行为。
+
+ 如果是监听滑动相关，建议在 `onTouchEvent` 中实现，如果要监听双击，那么就使用 `GestureDectector` 
+
+## Scroller
+
+ 弹性滑动对象，用于实现 View 的弹性滑动，**Scroller** 本身无法让 View 弹性滑动，需要和 View 的 `computeScroll` 方法配合使用。`startScroll` 方法是无法让 View 滑动的，`invalidate` 会导致 View 重绘，重回后会在 `draw` 方法中又会去调用 `computeScroll` 方法，`computeScroll` 方法又会去向 Scroller 获取当前的 scrollX 和 scrollY，然后通过 `scrollTo` 方法实现滑动，接着又调用 `postInvalidate` 方法如此反复。 
+
+## View 的滑动
+
+-  scrollTo/scrollBy 
+
+   适合对 View 内容的滑动。`scrollBy` 实际上也是调用了 `scrollTo` 方法 。
+
+-  使用动画 
+
+  操作简单，主要适用于没有交互的 View 和实现复杂的动画效果。
+
+- 改变布局参数 操作稍微复杂，适用于有交互的 View.
+
+## View 的事件分发
+
+参考 
+
+[深入理解Android事件分发机制]: https://www.jianshu.com/p/330003291ca6
+
+场景：
+
+![事件分发场景](https://raw.githubusercontent.com/autowanglei/autowanglei.github.io/master/_posts/android/Android学习记录/事件分发场景.webp)
+
+### 事件分发主要有三个方法处理
+
+- public boolean dispatchTouchEvent(MotionEvent ev) {} 
+
+  事件分发，返回事件是否消耗，消耗会调用当前view的onTouchEvent，否则传递给子view的dispatchTouchEvent，只要事件传递给该view，dispatchTouchEvent是首先要调用方法。
+
+- public boolean onInterceptTouchEvent(MontionEvent ev){}
+
+  是否对分发事件进行拦截，不拦截，继续分发；拦截，onTouchEvent消费事件，返回true，事件传递结束。
+
+- public boolean onTouchEvent(MontionEvent ev)
+
+  处理拦截的事件，处理返回true；不处理返回false，会返回到父控件的onTouchEvent。
+
+### 三个方法之间的关系
+
+```
+ public boolean dispatchTouchEvent(MotionEvent ev) {
+  boolean isDispatch;
+  if(onInterceptTouchEvent(ev)){
+     isDispatch=onTouchEvent(ev);
+  }else {
+     isDispatch=childView.dispatchTouchEvent(ev);
+  }
+  return isDispatch;
+ }
+```
 
 
 
