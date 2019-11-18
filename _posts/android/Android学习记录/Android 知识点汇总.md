@@ -274,6 +274,20 @@ LinerLayout、RelativeLayout、TabLayout、FrameLayout、GridLayout、AbsoluteLa
 
 ![事件分发场景](https://raw.githubusercontent.com/autowanglei/autowanglei.github.io/master/_posts/android/Android学习记录/事件分发场景.webp)
 
+ 老板（Activity） 
+
+ 经理（RootView） 
+
+ 组长（ViewGroup） 
+
+ 程序员（View1） 
+
+ 扫地阿姨（View2） 
+
+- 场景一：老板询问App项目进度，事件经过每个领导传递到达程序员处，程序员完成了项目（点击事件被View1消费了） 
+-  场景二 ：老板异想天开，想造宇宙飞船，事件经过每个领导传递到达程序员处，程序员表示做不了，反馈给老板（事件没有被消费） 
+-  场景三：老板询问技术部本月表现，只需要组长汇报就行，不需要通知程序员（ViewGroup 拦截并消费了事件） 
+
 ### 事件分发主要有三个方法处理
 
 - public boolean dispatchTouchEvent(MotionEvent ev) {} 
@@ -302,7 +316,107 @@ LinerLayout、RelativeLayout、TabLayout、FrameLayout、GridLayout、AbsoluteLa
  }
 ```
 
+- 结合这段伪代码和前面的例子的场景三，我们可以发现ViewGroup的事件分发规则是这样的，事件传递到ViewGroup首先调用它的dispatchTouchEvent方法，接下来是调用onInterceptTouchEvent方法，如果该方法返回true，则说明当前ViewGroup要拦截该事件，拦截之后则调用当前ViewGroup的onTouchEvent方法；如果不进行拦截，则调用子View的dispatchTouchEvent方法，结合场景二，如果到最后事件都没有被消费掉，则最后返回Activity，Activity不处理则事件消失。
+- 结合场景一、场景二，View接收到事件，如果进行处理，则直接在onTouchEvent进行处理返回true就表示事件被消费了，不进行处理则调用父类onTouchEvent方法或者返回false表示不消费该事件，然后事件再原路返回向上传递。
 
+### 事件传递流程
+
+```undefined
+Activity －> PhoneWindow －> DecorView －> ViewGroup －> ... －> View
+```
+
+-  总结一下每个传递者具有的方法 
+
+  |   类型   |       相关方法        | Activity | ViewGroup | View |
+  | :------: | :-------------------: | :------: | :-------: | :--: |
+  | 事件分发 |  dispatchTouchEvent   |    有    |    有     |  有  |
+  | 事件拦截 | onInterceptTouchEvent |    无    |    有     |  无  |
+  | 事件消费 |     onTouchEvent      |    有    |    有     |  有  |
+
+-  点击事件分发原则 
+
+  - onInterceptTouchEvent拦截事件，该View的onTouchEvent方法才会被调用，只有onTouchEvent返回true才表示该事件被消费，否则回传到上层View的onTouchEvent方法。
+  - 如果事件一直不被消费，则最终回传给Activity，Activity不消费则事件消失。
+  - 事件是否被消费是根据返回值，true表示消费，false表示不消费。
+
+### view相关事件调度优先顺序
+
+ onTouchListener>onTouchEvent > onLongClickListener > onClickListener 
+
+### 核心总结
+
+- 正常情况下触摸一次屏幕触发事件序列为ACTION_DOWN-->ACTION_UP
+- 当一个View决定拦截，那么这一个事件序列只能由这个View来处理，onInterceptTouchEvent方法并不是每次产生动作都会被调用到。
+- 一个View开始处理事件，但是它不消耗ACTION_DOWN，也就是onTouchEvent返回false，则这个事件会交由他的父元素的onTouchEvent方法来进行处理，而这个事件序列的其他剩余ACACTION_MOVE，ACTION_UP也不会再给该View来处理。
+- View没有onInterceptTouchEvent方法，View一旦接收到事件就调用onTouchEvent方法
+- ViewGroup默认不拦截任何事件（onInterceptTouchEvent方法默认返回false）。
+- View的onTouchEvent方法默认是处理点击事件的，除非他是不可点击的（clickable和longClickable同时为false）
+- 事件分发机制的核心原理就是责任链模式，事件层层传递，直到被消费。
+
+## 在 Activity 中获取某个 View 的宽高
+
+-  Activity/View#onWindowFocusChanged 
+
+  ```java
+  // 此时View已经初始化完毕
+  // 当Activity的窗口得到焦点和失去焦点时均会被调用一次
+  // 如果频繁地进行onResume和onPause，那么onWindowFocusChanged也会被频繁地调用
+  public void onWindowFocusChanged(boolean hasFocus) {
+      super.onWindowFocusChanged(hasFocus);
+      if (hasFocus) {
+          int width = view.getMeasureWidth();
+          int height = view.getMeasuredHeight();
+      }
+  }
+  ```
+
+## Draw 的基本流程
+
+```java
+// 绘制基本上可以分为六个步骤
+public void draw(Canvas canvas) {
+    ...
+    // 步骤一：绘制View的背景
+    drawBackground(canvas);
+    ...
+    // 步骤二：如果需要的话，保持canvas的图层，为fading做准备
+    saveCount = canvas.getSaveCount();
+    ...
+    canvas.saveLayer(left, top, right, top + length, null, flags);
+    ...
+    // 步骤三：绘制View的内容
+    onDraw(canvas);
+    ...
+    // 步骤四：绘制View的子View
+    dispatchDraw(canvas);
+    ...
+    // 步骤五：如果需要的话，绘制View的fading边缘并恢复图层
+    canvas.drawRect(left, top, right, top + length, p);
+    ...
+    canvas.restoreToCount(saveCount);
+    ...
+    // 步骤六：绘制View的装饰(例如滚动条等等)
+    onDrawForeground(canvas)
+}
+```
+
+## 自定义 View
+
+- 继承 View 重写 `onDraw` 方法
+
+  主要用于实现一些不规则的效果，静态或者动态地显示一些不规则的图形，即重写 `onDraw` 方法。采用这种方式需要自己支持 wrap_content，并且 padding 也需要自己处理。
+
+- 继承 ViewGroup 派生特殊的 Layout
+
+  主要用于实现自定义布局，采用这种方式需要合适地处理 ViewGroup 的测量、布局两个过程，并同时处理子元素的测量和布局过程。
+
+- 继承特定的 View
+
+  用于扩张某种已有的View的功能
+
+- 继承特定的 ViewGroup
+
+  用于扩张某种已有的ViewGroup的功能
 
 # SDK
 
