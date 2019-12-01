@@ -1,5 +1,4 @@
 <center><font size="7" ><b>RxJava+Retrofit+okhttp</b></font> </center>
-
 # RxJava
 
 Rxjava是基于观察者模式实现的，提供异步操作，保持代码简洁的开源库。
@@ -85,3 +84,6 @@ Rxjava是基于观察者模式实现的，提供异步操作，保持代码简�
    2. 调用 Observable中的 OnSubscribe.call(Subscriber) 。在这里，事件发送的逻辑开始运行。从这也可以看出，在 RxJava 中， Observable 并不是在创建的时候就立即开始发送事件，而是在它被订阅的时候，即当 subscribe()方法执行的时候。
    3. 将传入的 Subscriber 作为 Subscription` 返回。这是为了方便 `unsubscribe().
 
+# Retrofit
+
+Retrofit将 Http请求 抽象成 Java接口：采用 注解 描述网络请求参数 和配置网络请求参数 
