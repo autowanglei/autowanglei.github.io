@@ -1,3 +1,5 @@
+<center><font size="7" ><b>Android APP性能优化</b></font> </center>
+
 # 性能优化
 
 - APP使卡顿
@@ -30,15 +32,20 @@
   
   ​          shrinkResources true
   
+
 ​      }
-  
+
    **代码优化**
    （1）实现功能模块的逻辑简化
    （2）删除无用的代码。
    （3）移除无用的依赖库。
-  
+
    **代码混淆。**
    使用proGuard 代码混淆器工具，它包括压缩、优化、混淆等功能。
+
+# Android内存管理
+
+![Android内存管理](https://raw.githubusercontent.com/autowanglei/autowanglei.github.io/master/_posts/android/Android学习记录/Android内存管理.jpg)
 
 # 内存优化总体大纲
 
@@ -99,7 +106,7 @@ APP内存优化其实是优化程序的内存使用、空间占用，从以下�
 
   Android系统给每个应用分配的内存是有限的，而图片资源非常消耗内存（即Bitmap），对Bitmap的使用和内存管理稍有不慎就会引发内存溢出，最终导致OOM。
 
-  ![bitmap优化总结](https://raw.githubusercontent.com/autowanglei/autowanglei.github.io/master/_posts/android/Android学习记录/bitmap优化总结.jpg)
+  ![bitmap优化总结](https://raw.githubusercontent.com/autowanglei/autowanglei.github.io/master/_posts/android/Android学习记录/bitmap优化总结.jpg) 
 
   
 
@@ -881,6 +888,10 @@ Android系统给每个应用分配的内存是有限的，而图片资源非常�
 
     ![解码方式](https://raw.githubusercontent.com/autowanglei/autowanglei.github.io/master/_posts/android/Android学习记录/bitmap解码方式.jpg)
 
+    解码方式代表一像素所占的位数，8位为一个字节。
+
+    一张图片（BitMap）占用的内存=图片宽度×图片长度×单位像素占用的字节数
+
   - 优化方案
 
      根据需求选择合适的解码方式：
@@ -952,7 +963,7 @@ Android系统给每个应用分配的内存是有限的，而图片资源非常�
    WeakReference<T>：弱引用-->随时可能会被垃圾回收器回收，不一定要等到虚拟机内存不足时才强制回收。
 
   ```
-   WeakReference sr = new` `WeakReference(new User());
+   WeakReference sr = new WeakReference(new User());
   ```
 
   防止内存泄漏，要保证内存被虚拟机回收。

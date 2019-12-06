@@ -86,4 +86,4 @@ Rxjava是基于观察者模式实现的，提供异步操作，保持代码简�
 
 # Retrofit
 
-Retrofit将 Http请求 抽象成 Java接口：采用 注解 描述网络请求参数 和配置网络请求参数 
+Retrofit将 Http请求 抽象成 Java接口：采用注解描述网络请求参数和配置网络请求参数 
