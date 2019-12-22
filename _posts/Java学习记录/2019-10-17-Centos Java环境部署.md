@@ -1,8 +1,38 @@
+<center><font size="7" ><b>Java环境部署</b></font> </center>
 
+# 安装Docker
 
-## Java环境部署
+https://www.cnblogs.com/qgc1995/p/9553572.html
 
-### 1.CentOS7自启动
+```
+1.yum包更新到最新
+yum update
+2.安装需要的软件包， yum-util 提供yum-config-manager功能，另外两个是devicemapper驱动依赖的
+yum install -y yum-utils device-mapper-persistent-data lvm2
+3.设置yum源
+yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+4.可以查看所有仓库中所有docker版本，并选择特定版本安装
+yum list docker-ce --showduplicates | sort -r
+5.安装Docker
+yum install docker-ce-17.12.1.ce
+6.启动Docker
+systemctl start docker
+7.加入开机启动
+systemctl enable docker
+8.验证安装是否成功
+docker version 
+```
+
+# 安装docker compose
+
+https://www.jianshu.com/p/658911a8cff3
+
+```ruby
+sudo curl -L https://github.com/docker/compose/releases/download/1.21.2/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker-compose
+```
+
+# CentOS7自启动
 
 1. 写个 shell 脚本
 
@@ -51,7 +81,7 @@
    chmod +x /etc/rc.d/rc.local
    ```
 
-### 2.redis部署
+# redis部署
 
  	https://www.jianshu.com/p/cb3f94b263da 
 
@@ -59,7 +89,7 @@
 2. docker volume create redis
 3. docker run -p 6379:6379  --restart=always  --mount source=redis,destination=/var/lib/redis  -v /etc/localtime:/etc/localtime  --name redis  -d redis:5.0.6 redis-server --appendonly yes
 
-### 3.Docker部署
+# Docker部署
 
 1. **CentOS7下安装Docker-Compose**
 

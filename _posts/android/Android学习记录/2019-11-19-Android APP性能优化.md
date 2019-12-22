@@ -45,7 +45,46 @@
 
 # Android内存管理
 
+## 简介
+
+Android内存管理=内存分配+内存回收。
+
 ![Android内存管理](https://raw.githubusercontent.com/autowanglei/autowanglei.github.io/master/_posts/android/Android学习记录/Android内存管理.jpg)
+
+## 针对进程的内存策略
+
+### 内存分配策略
+
+由 ActivityManagerService集中管理 所有进程的内存分配。
+
+### 内存回收策略（lowmemory killer机制）
+
+Android中的进程是托管的；当进程空间紧张时，会按进程优先级低->>高的顺序自动回收进程
+Android将进程分为5个优先等级，具体如下：
+
+ ![示意图](https://imgconvert.csdnimg.cn/aHR0cDovL3VwbG9hZC1pbWFnZXMuamlhbnNodS5pby91cGxvYWRfaW1hZ2VzLzk0NDM2NS05N2Q3NmY5M2YwZmRkN2Y2LnBuZz9pbWFnZU1vZ3IyL2F1dG8tb3JpZW50L3N0cmlwJTdDaW1hZ2VWaWV3Mi8yL3cvMTI0MA) 
+
+进程内存回收最终是由linux内核进行的，kill掉优先级低的进程。
+
+## 针对对象、变量的内存策略
+
+### 内存分配策略
+
+对象 / 变量的内存分配 **由程序自动负责**，共有3种：静态分配、栈式分配、 & 堆式分配，分别面向静态变量、局部变量 & 对象实例
+
+具体如下：
+
+|        内存分配策略        |      使用的内存空间      |                          存储的数据                          |                         分配策略描述                         |
+| :------------------------: | :----------------------: | :----------------------------------------------------------: | :----------------------------------------------------------: |
+|          静态分配          | 方法区<br>（静态存储区） |        存储已被虚拟机加载的类信息、<br>常量、静态变量        | 程序编译时就已分配好，<br/>存在于整个程序运行期间<br/>（不需回收） |
+|          栈式分配          |           栈区           | 存储方法执行时的局部变量<br/>（含数据类型、对象的引用）<br/>（以栈帧的形式） | 方法执行时，定义局部变量，<br/>则由程序自动在栈中分配内存<br/>方法执行结束，则由栈帧自动释放内存<br/>效率高，内存容量有限 |
+| 堆式分配<br>(动态内存分配) |           堆区           |           存储Java对象的实例&<br/>实例内的成员变量           |                    常见对象实例时分配内存                    |
+
+###  内存释放策略
+
+ 对象 / 变量的内存释放 由Java垃圾回收器（GC） / 帧栈负责。
+
+<img src="https://imgconvert.csdnimg.cn/aHR0cDovL3VwbG9hZC1pbWFnZXMuamlhbnNodS5pby91cGxvYWRfaW1hZ2VzLzk0NDM2NS1kMjYxY2NjMDJjZmNlYzEyLnBuZz9pbWFnZU1vZ3IyL2F1dG8tb3JpZW50L3N0cmlwJTdDaW1hZ2VWaWV3Mi8yL3cvMTI0MA" alt="img"  /> 
 
 # 内存优化总体大纲
 

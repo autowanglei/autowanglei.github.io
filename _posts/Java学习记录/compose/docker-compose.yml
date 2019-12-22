@@ -1,0 +1,21 @@
+#
+# Copyright IBM Corp. All Rights Reserved.
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+version: '2'
+
+services:
+  weighbridgeCloudService:
+    container_name: weighbridgeCloudService
+    build: .
+    image: base
+    tty: true
+#    hostname: weighbridgeCloudService
+
+    ports:
+      - 7028:7028
+    network_mode: host
+    volumes:
+      - ./log/:/log
+
