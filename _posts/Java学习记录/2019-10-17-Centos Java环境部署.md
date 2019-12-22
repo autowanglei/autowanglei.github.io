@@ -32,6 +32,10 @@ sudo curl -L https://github.com/docker/compose/releases/download/1.21.2/docker-c
 sudo chmod +x /usr/local/bin/docker-compose
 ```
 
+# docker compose 部署
+
+详见 https://github.com/autowanglei/autowanglei.github.io/tree/master/_posts/Java学习记录/compose
+
 # CentOS7自启动
 
 1. 写个 shell 脚本
