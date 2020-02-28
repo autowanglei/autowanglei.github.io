@@ -1,5 +1,4 @@
 <center><font size="7" ><b>Java环境部署</b></font> </center>
-
 # 安装Docker
 
 https://www.cnblogs.com/qgc1995/p/9553572.html
@@ -91,7 +90,7 @@ sudo chmod +x /usr/local/bin/docker-compose
 
 1. docker pull redis:5.0.6
 2. docker volume create redis
-3. docker run -p 6379:6379  --restart=always  --mount source=redis,destination=/var/lib/redis  -v /etc/localtime:/etc/localtime  --name redis  -d redis:5.0.6 redis-server --appendonly yes
+3. docker run -p 6379:6379  --restart=always  --mount source=redis,destination=/var/lib/redis  -v /etc/localtime:/etc/localtime  --name redis  -d redis:5.0.6 redis-server --appendonly yes --requirepass "weighbridge_123456"
 
 # Docker部署
 
