@@ -1,46 +1,10 @@
 <center><font size="7" ><b>Java环境部署</b></font> </center>
-# 安装Docker
-
-https://www.cnblogs.com/qgc1995/p/9553572.html
-
-```
-1.yum包更新到最新
-yum update
-2.安装需要的软件包， yum-util 提供yum-config-manager功能，另外两个是devicemapper驱动依赖的
-yum install -y yum-utils device-mapper-persistent-data lvm2
-3.设置yum源
-yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
-4.可以查看所有仓库中所有docker版本，并选择特定版本安装
-yum list docker-ce --showduplicates | sort -r
-5.安装Docker
-yum install docker-ce-17.12.1.ce
-6.启动Docker
-systemctl start docker
-7.加入开机启动
-systemctl enable docker
-8.验证安装是否成功
-docker version 
-```
-
-# 安装docker compose
-
-https://www.jianshu.com/p/658911a8cff3
-
-```ruby
-sudo curl -L https://github.com/docker/compose/releases/download/1.21.2/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
-sudo chmod +x /usr/local/bin/docker-compose
-```
-
-# docker compose 部署
-
-详见 https://github.com/autowanglei/autowanglei.github.io/tree/master/_posts/Java学习记录/compose
-
 # CentOS7自启动
 
 1. 写个 shell 脚本
 
    写一个启动 startup 脚本，在系统启动的时候执行它
-   在一个你想放启动脚本的地方创建一个 `startup.sh`，我这里创建在了 `/usr/local/scripts/startup.sh`
+   在一个你想放启动脚本的地方创建一个 `startup.sh`，我这里创建在了 `/usr/local/startup.sh`
 
    文件内容如下：
 
@@ -75,7 +39,7 @@ sudo chmod +x /usr/local/bin/docker-compose
    # that this script will be executed during boot.
    
    touch /var/lock/subsys/local
-   /usr/local/scripts/startup.sh # 新增自定义启动脚本
+   /usr/local/startup.sh # 新增自定义启动脚本
    ```
 
    设置文件权限
@@ -94,22 +58,43 @@ sudo chmod +x /usr/local/bin/docker-compose
 
 # Docker部署
 
-1. **CentOS7下安装Docker-Compose**
+1. **安装Docker**
 
-   https://www.cnblogs.com/YatHo/p/7815400.html 
+   https://www.cnblogs.com/qgc1995/p/9553572.html
 
-   yum -y install epel-release
-   yum install python-pip
-   pip install --upgrade pip
-   pip install docker-compose
+   ```
+   1.yum包更新到最新
+   yum update
+   2.安装需要的软件包， yum-util 提供yum-config-manager功能，另外两个是devicemapper驱动依赖的
+   yum install -y yum-utils device-mapper-persistent-data lvm2
+   3.设置yum源
+   yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+   4.可以查看所有仓库中所有docker版本，并选择特定版本安装
+   yum list docker-ce --showduplicates | sort -r
+   5.安装Docker
+   yum install docker-ce-17.12.1.ce
+   6.启动Docker
+   systemctl start docker
+   7.加入开机启动
+   systemctl enable docker
+   8.验证安装是否成功
+   docker version 
+   ```
 
-2. **centos7.5 下docker部署springboot应用**
+2. 安装docker compose
 
-   https://blog.csdn.net/u012371097/article/details/83622812
+   https://www.jianshu.com/p/658911a8cff3
 
-   docker build -t weighbridgecloudservice .
+   ```ruby
+   sudo curl -L https://github.com/docker/compose/releases/download/1.21.2/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
+   sudo chmod +x /usr/local/bin/docker-compose
+   ```
 
-3. **创建容器时[Warning] IPv4 forwarding is disabled. Networking will not work.**
+3. docker compose 部署
+
+4. 详见 https://github.com/autowanglei/autowanglei.github.io/tree/master/_posts/Java学习记录/compose
+
+5. 创建容器时[Warning] IPv4 forwarding is disabled. Networking will not work.**
 
    https://blog.csdn.net/zhydream77/article/details/81902457
    在docker的宿主机中更改以下
@@ -123,7 +108,7 @@ sudo chmod +x /usr/local/bin/docker-compose
 
    systemctl restart network
 
-4. **docker常用指令**
+6. **docker常用指令**
 
    docker rmi [image]
 
@@ -139,7 +124,7 @@ sudo chmod +x /usr/local/bin/docker-compose
 
    docker run -d --net host weighbridgecloudservice
 
-5. **linux时间**
+7. **linux时间**
 
    date 查看当前时间
    安装时间同步插件yum install ntpdate
@@ -149,7 +134,7 @@ sudo chmod +x /usr/local/bin/docker-compose
    	2）rm -rf /etc/localtime 删除本地时间
    	3）ln -s /usr/share/zoneinfo/Asia/Shanghai /etc/localtime 设置时区为上海
 
-6. **docker镜像导出  导入**
+8. **docker镜像导出  导入**
 
    **6.1save load**
 
