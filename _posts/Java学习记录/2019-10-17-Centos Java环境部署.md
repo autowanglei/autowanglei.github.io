@@ -52,13 +52,37 @@
 
 # 2 redis部署
 
- 	https://www.jianshu.com/p/cb3f94b263da 
+ 	https://blog.csdn.net/qq_30644579/article/details/83537529
 
 1. docker pull redis:5.0.6
 
-2. docker volume create redis
+2. 主机创建data文件夹和redis.config文件
 
-3. docker run -p 6379:6379  --restart=always  --mount source=redis,destination=/var/lib/redis  -v /etc/localtime:/etc/localtime  --name redis  -d redis:5.0.6 redis-server --appendonly yes --requirepass "weighbridge_123456"
+   ```
+   mkdir docker
+   cd docker
+   mkdir redis
+   cd redis
+   ##进入redis文件夹，可以去官网下载一个redis.conf拖进来
+   mkdir data
+    
+   切记注释掉redis.conf中的：#daemonize yes 否则无法启动容器
+   重要话说三遍：注释掉#daemonize yes，注释掉#daemonize yes，注释掉#daemonize yes
+   ```
+
+3. docker run -p 6379:6379 -d --privileged=true --restart=always  -v /docker/redis/redis.conf:/etc/redis/redis.conf -v /docker/redis/data:/data -v /etc/localtime:/etc/localtime  --name redis  -d redis:5.0.6 redis-server /etc/redis/redis.conf --appendonly yes --requirepass "weighbridge_123456"
+
+   ```
+   --privileged=true：容器内的root拥有真正root权限，否则容器内root只是外部普通用户权限
+   
+   -v /docker/redis/redis.conf:/etc/redis/redis.conf：映射配置文件
+   
+   -v /docker/redis/data:/data：映射数据目录
+   
+   redis-server /etc/redis/redis.conf：指定配置文件启动redis-server进程
+   
+   --appendonly yes：开启数据持久化
+   ```
 
 4. 登录验证
 
