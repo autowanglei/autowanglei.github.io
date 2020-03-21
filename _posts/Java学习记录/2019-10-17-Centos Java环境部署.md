@@ -276,6 +276,15 @@ rabbitmq-plugins enable rabbitmq_management
   rabbitmqctl set_user_tags admin administrator
   ```
 
+-  创建 一个用户和 虚拟主机，并允许admin用户访问该虚拟主机
+
+  ```
+  rabbitmqctl add_user celery celery
+  rabbitmqctl add_vhost celery_vhost
+  rabbitmqctl set_user_tags celery  celery_tag
+  rabbitmqctl set_permissions -p celery_vhost celery  ".*" ".*" ".*"
+  ```
+
 ## 4.6 设置开机自启
 
 ```
