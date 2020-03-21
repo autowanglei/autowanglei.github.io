@@ -1,5 +1,7 @@
 <center><font size="7" ><b>Java环境部署</b></font> </center>
-# CentOS7自启动
+# 1 CentOS7自启动
+
+- sss 
 
 1. 写个 shell 脚本
 
@@ -39,7 +41,7 @@
    # that this script will be executed during boot.
    
    touch /var/lock/subsys/local
-   /usr/local/startup.sh # 新增自定义启动脚本
+   /usr/local/scripts/startup.sh # 新增自定义启动脚本
    ```
 
    设置文件权限
@@ -48,15 +50,34 @@
    chmod +x /etc/rc.d/rc.local
    ```
 
-# redis部署
+# 2 redis部署
 
  	https://www.jianshu.com/p/cb3f94b263da 
 
 1. docker pull redis:5.0.6
+
 2. docker volume create redis
+
 3. docker run -p 6379:6379  --restart=always  --mount source=redis,destination=/var/lib/redis  -v /etc/localtime:/etc/localtime  --name redis  -d redis:5.0.6 redis-server --appendonly yes --requirepass "weighbridge_123456"
 
-# Docker部署
+4. 登录验证
+
+   redis-cli -h 127.0.0.1 -p 6379 -a myPassword
+
+5.  通过config set指令来在线keyspace配置. 
+
+   ```js
+   开启所有的事件
+   redis-cli config set notify-keyspace-events KEA
+   
+   开启keyspace Events
+   redis-cli config set notify-keyspace-events KA
+   
+   开启keyspace 所有List 操作的 Events
+   redis-cli config set notify-keyspace-events Kl
+   ```
+
+# 3 Docker部署
 
 1. **安装Docker**
 
@@ -136,7 +157,7 @@
 
 8. **docker镜像导出  导入**
 
-   **6.1save load**
+   **8.1 save load**
 
    - save 示例
 
@@ -152,7 +173,7 @@
    ​		docker load < nginx.tar
    ​		其中-i和<表示从文件输入。会成功导入镜像及相关元数据，包括tag信息
 
-   **6.2 export import** 
+   **8.2 export import** 
 
    - export 示例
 
@@ -165,7 +186,7 @@
      ​或
      ​cat nginx-test.tar | docker import - nginx:imp
 
-   **6.3 区别**
+   **8.3 区别**
 
    1. export命令导出的tar文件略小于save命令导出的
    2. export命令是从容器（container）中导出tar文件，而save命令则是从镜像（images）中导出
@@ -173,9 +194,106 @@
 
    
 
-   
+# 4 rabbitmq
 
+## 4.1 下载rlang和rabbitmq
+
+```
+wget https://zysd-shanghai.oss-cn-shanghai.aliyuncs.com/software/linux/erlang/erlang-21.1-1.el7.centos.x86_64.rpm 
+
+wget https://zysd-shanghai.oss-cn-shanghai.aliyuncs.com/software/linux/rabbitmq/rabbitmq-server-3.7.8-1.el7.noarch.rpm 
+```
+
+## 4.2 安装Erlang和RabbitMQ
+
+ Erlang是一种通用的面向并发的编程语言，目的是创造一种可以应对大规模并发活动的编程语言和运行环境。
+
+```
+rpm -ivh erlang-21.1-1.el7.centos.x86_64.rpm 
+
+rpm -ivh rabbitmq-server-3.7.8-1.el7.noarch.rpm 
+```
+
+## 4.3  启动、关闭RabbitMQ
+
+```
+systemctl start rabbitmq-server
+systemctl stop rabbitmq-server
+```
+
+## 4.4 开启后台管理页面
+
+```
+rabbitmq-plugins enable rabbitmq_management
+```
+
+## 4.5 用户管理
+
+- 配置远程用户访问（否则web登录会提示“User can only log in via localhost”）
+
+  ```
+  找到这个文件rabbit.app
+  /usr/lib/rabbitmq/lib/rabbitmq_server-3.7.8/ebin/rabbit.app
+  将：{loopback_users, [<<”guest”>>]}，
+  改为：{loopback_users, []}，
+  原因：rabbitmq从3.3.0开始禁止使用guest/guest权限通过除localhost外的访问
+  ```
+
+- 删除guest用户
+
+  ```
+  rabbitmqctl delete_user guest
+  ```
+
+- 创建新用户, 具有管理员权限
+
+  ```
+  rabbitmqctl add_user admin password
+  rabbitmqctl set_user_tags admin administrator
+  ```
+
+## 4.6 设置开机自启
+
+```
+chkconfig rabbitmq-server on
+```
+
+## 4.7 各种启动出错问题
+
+1. Job for rabbitmq-server.service failed because the control process exited with error code. See “systemctl status rabbitmq-server.service” and “journalctl -xe” for details.
+
+   ```
+   ● rabbitmq-server.service - RabbitMQ broker
+      Loaded: loaded (/usr/lib/systemd/system/rabbitmq-server.service; disabled; vendor preset: disabled)
+      Active: activating (auto-restart) (Result: exit-code) since 一 2019-03-25 04:11:59 CST; 9s ago
+     Process: 108118 ExecStop=/usr/sbin/rabbitmqctl shutdown (code=exited, status=127)
+     Process: 107940 ExecStart=/usr/sbin/rabbitmq-server (code=exited, status=1/FAILURE)
+    Main PID: 107940 (code=exited, status=1/FAILURE)
    
+   3月 25 04:11:59 localhost.localdomain systemd[1]: rabbitmq-server.service: control process exited, code=exited status=127
+   3月 25 04:11:59 localhost.localdomain systemd[1]: Failed to start RabbitMQ broker.
+   3月 25 04:11:59 localhost.localdomain systemd[1]: Unit rabbitmq-server.service entered failed state.
+   3月 25 04:11:59 localhost.localdomain systemd[1]: rabbitmq-server.service failed.
+   ```
+
+   **根本的原因是rabbitMq和erlang版本不匹配问题，官网有说明**
+
+   **RabbitMQ和Erlang / OTP兼容性矩阵**
+
+    
+
+   | RabbitMQ版本 | 最低要求的Erlang / OTP | 支持的最大Erlang / OTP | 笔记                                                         |
+   | :----------: | :--------------------: | :--------------------: | ------------------------------------------------------------ |
+   | 3.7.7-3.7.13 |         20.3.X         |         21.3.X         | 1.Erlang / OTP 19.3.x支持[自](https://groups.google.com/forum/#!topic/rabbitmq-users/G4UJ9zbIYHs) 2019年1月1日起停止使用。<br>2.为获得最佳TLS支持，建议使用最新版本的Erlang / OTP 21.x。<br>3.在Windows上，Erlang / OTP 20.2更改了默认的cookie文件位置。 |
+   | 3.7.0-3.7.6  |          19.3          |         20.3.x         | 1.为获得最佳TLS支持，建议使用最新版本的Erlang / OTP 20.3.x。<br>2.19.3.6.4之前的Erlang版本具有已知的错误（例如[ERL-430](https://bugs.erlang.org/browse/ERL-430)，[ERL-448](https://bugs.erlang.org/browse/ERL-448)），可以阻止RabbitMQ节点接受连接（包括来自CLI工具）并停止。<br>3.19.3.6.4之前的版本容易受到[ROBOT攻击](https://robotattack.org/)（CVE-2017-1000385）。<br>4.在Windows上，Erlang / OTP 20.2更改了默认的cookie文件位置。 |
+
+2. Failed to start LSB: Enable AMQP service provided by RabbitMQ broker.
+
+   ```perl
+   # vi /etc/rabbitmq/rabbitmq-env.conf
+   
+   NODENAME=rabbit@localhost
+   ```
 
 
 
