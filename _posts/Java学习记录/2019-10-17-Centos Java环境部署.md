@@ -276,7 +276,7 @@ rabbitmq-plugins enable rabbitmq_management
   rabbitmqctl set_user_tags admin administrator
   ```
 
--  创建 一个用户和 虚拟主机，并允许admin用户访问该虚拟主机
+-  创建 一个用户和虚拟主机，并允许admin用户访问该虚拟主机
 
   ```
   rabbitmqctl add_user celery celery
@@ -328,7 +328,15 @@ chkconfig rabbitmq-server on
    NODENAME=rabbit@localhost
    ```
 
+# 5 jvisualvm+jmx监听docker容器中的jvm情况
 
+1. start.sh 添加：-Djava.rmi.server.hostname=114.215.151.183 -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=8003 -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.rmi.port=8004
 
+2. docker-compose.yml 映射端口
 
+3. C:\Program Files\Java\jdk1.8.0_181\bin\jvisualvm.exe 
+
+   文件-添加远程主机
+
+   右键 远程主机 -添加jmx连接
 
