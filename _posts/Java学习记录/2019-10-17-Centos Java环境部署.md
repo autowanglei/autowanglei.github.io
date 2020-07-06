@@ -1,7 +1,22 @@
 <center><font size="7" ><b>Java环境部署</b></font> </center>
-# 1 CentOS7自启动
 
-- sss 
+* [1 CentOS7自启动](#1-centos7%E8%87%AA%E5%90%AF%E5%8A%A8)
+* [2 redis部署](#2-redis%E9%83%A8%E7%BD%B2)
+* [3 Docker部署](#3-docker%E9%83%A8%E7%BD%B2)
+* [4 rabbitmq](#4-rabbitmq)
+  * [4\.1 下载rlang和rabbitmq](#41-%E4%B8%8B%E8%BD%BDrlang%E5%92%8Crabbitmq)
+  * [4\.2 安装Erlang和RabbitMQ](#42-%E5%AE%89%E8%A3%85erlang%E5%92%8Crabbitmq)
+  * [4\.3  启动、关闭RabbitMQ](#43--%E5%90%AF%E5%8A%A8%E5%85%B3%E9%97%ADrabbitmq)
+  * [4\.4 开启后台管理页面](#44-%E5%BC%80%E5%90%AF%E5%90%8E%E5%8F%B0%E7%AE%A1%E7%90%86%E9%A1%B5%E9%9D%A2)
+  * [4\.5 用户管理](#45-%E7%94%A8%E6%88%B7%E7%AE%A1%E7%90%86)
+  * [4\.6 设置开机自启](#46-%E8%AE%BE%E7%BD%AE%E5%BC%80%E6%9C%BA%E8%87%AA%E5%90%AF)
+  * [4\.7 各种启动出错问题](#47-%E5%90%84%E7%A7%8D%E5%90%AF%E5%8A%A8%E5%87%BA%E9%94%99%E9%97%AE%E9%A2%98)
+* [5 jvisualvm\+jmx监听docker容器中的jvm情况](#5-jvisualvmjmx%E7%9B%91%E5%90%ACdocker%E5%AE%B9%E5%99%A8%E4%B8%AD%E7%9A%84jvm%E6%83%85%E5%86%B5)
+* [6 mysql设置唯一键](#6-mysql%E8%AE%BE%E7%BD%AE%E5%94%AF%E4%B8%80%E9%94%AE)
+
+
+
+# 1 CentOS7自启动
 
 1. 写个 shell 脚本
 
@@ -216,7 +231,14 @@
    2. export命令是从容器（container）中导出tar文件，而save命令则是从镜像（images）中导出
    3. 基于第二点，export导出的文件再import回去时，无法保留镜像所有历史（即每一层layer信息，不熟悉的可以去看Dockerfile），不能进行回滚操作；而save是依据镜像来的，所以导入时可以完整保留下每一层layer信息。如下图所示，nginx:latest是save导出load导入的，nginx:imp是export导出import导入的。
 
-   
+9. 限值docker日志大小
+
+   #vim /etc/docker/daemon.json
+
+   {
+     "log-driver":"json-file",
+     "log-opts": {"max-size":"500m", "max-file":"3"}
+   }
 
 # 4 rabbitmq
 
@@ -340,3 +362,14 @@ chkconfig rabbitmq-server on
 
    右键 远程主机 -添加jmx连接
 
+# 6 mysql设置唯一键
+
+alter table vehicle_info add UNIQUE (plate_number)
+
+
+
+
+
+```bash
+docker exec -it  XXX  bash
+```
